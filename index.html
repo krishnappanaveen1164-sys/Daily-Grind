@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#172c29">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daily Grind">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Daily Grind</title>
+<style>
+:root{color-scheme:light;--ink:#172c29;--lime:#d6f379;--muted:#63736d;--line:#e0e7e2;--paper:#f5f7f4;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{background:var(--ink);color:white;padding:26px 20px 22px;border-radius:0 0 26px 26px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:var(--lime);color:var(--ink);display:grid;place-items:center;font-size:25px;font-weight:900}
+.kicker{font-size:11px;letter-spacing:1.5px;color:#c0d1c8;font-weight:700}.brand h1{font-size:21px;margin:3px 0 0;letter-spacing:.7px}.hero{font-size:26px;line-height:1.15;margin:25px 0 7px;font-weight:800}.sub{font-size:14px;color:#d0dbd6;margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:20px}.stat{background:#29413b;border-radius:15px;padding:12px 10px}.stat strong{display:block;color:var(--lime);font-size:20px}.stat span{font-size:11px;color:#d0dbd6}
+main{padding:20px 16px 34px;max-width:650px;margin:auto}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.section-title{font-size:20px;font-weight:800;margin:0}.pill{font-size:12px;font-weight:700;border-radius:999px;background:#e7efdd;padding:8px 11px}
+.progress{height:8px;background:#e0e7e2;border-radius:20px;overflow:hidden;margin:14px 0 19px}.progress div{height:100%;width:0;background:#91b85b;border-radius:20px;transition:width .2s}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0 20px}.day{border:0;background:#e9eeea;border-radius:12px;padding:10px 0;color:var(--ink);font-weight:700}.day small{display:block;font-size:10px;font-weight:500;margin-bottom:4px}.day.active{background:var(--lime)}
+.task{display:flex;align-items:center;gap:12px;background:white;border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:9px;min-height:75px}.check{width:27px;height:27px;flex:0 0 27px;border:2px solid #bdc9c1;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:900}.task.done{background:#edf2e8;border-color:#cbdcba}.task.done .check{background:var(--lime);border-color:var(--lime)}.taskbody{min-width:0;flex:1}.time{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px}.taskname{font-size:14px;font-weight:750}.detail{font-size:12px;color:var(--muted);margin-top:4px}.task.done .taskname{text-decoration:line-through;color:#63736d}
+.actions{display:flex;gap:9px;margin-top:15px}.btn{border:0;border-radius:13px;padding:13px 15px;font-weight:750;font-size:13px;flex:1}.primary{background:var(--ink);color:white}.secondary{background:#e5ebe6;color:var(--ink)}.panel{background:white;border:1px solid var(--line);border-radius:17px;padding:16px;margin-top:18px}.panel h2{font-size:17px;margin:0 0 12px}.goal{display:flex;gap:12px;margin:13px 0}.goal .emoji{font-size:21px}.goal strong{font-size:14px}.goal p{font-size:12px;color:var(--muted);margin:4px 0 0;line-height:1.4}.footer{text-align:center;font-size:11px;color:var(--muted);padding:22px 0 5px}.notice{background:#fff8df;border:1px solid #f1e2a9;padding:12px;border-radius:12px;font-size:12px;line-height:1.45;margin-top:14px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">⚡</div><div><div class="kicker">YOUR ROUTINE. YOUR PROGRESS.</div><h1>DAILY GRIND</h1></div></div>
+  <div class="hero">Small steps.<br>Big progress.</div>
+  <p class="sub">You don't need a perfect day, bro. Just keep showing up.</p>
+  <div class="stats"><div class="stat"><strong>3 hrs</strong><span>Study</span></div><div class="stat"><strong>2 hrs</strong><span>Gaming</span></div><div class="stat"><strong>15 min</strong><span>Morning walk</span></div></div>
+</header>
+<main>
+  <div class="row"><h2 class="section-title">Your dashboard</h2><span class="pill" id="count">0/15 done</span></div>
+  <div class="progress"><div id="bar"></div></div>
+  <div class="row"><strong>Choose a day</strong><span id="daylabel" style="font-size:12px;color:var(--muted)">Day 1</span></div>
+  <div class="days" id="days"></div>
+  <div id="tasks"></div>
+  <div class="actions"><button class="btn primary" id="copy">Copy today's progress</button><button class="btn secondary" id="reset">Reset day</button></div>
+  <section class="panel">
+    <h2>🎯 Your goals</h2>
+    <div class="goal"><span class="emoji">📚</span><div><strong>Study 3 hours</strong><p>Three focused sessions of 60 minutes.</p></div></div>
+    <div class="goal"><span class="emoji">🎮</span><div><strong>Game for 2 hours</strong><p>90 minutes in the morning and 30 minutes later.</p></div></div>
+    <div class="goal"><span class="emoji">🚶</span><div><strong>Short morning walk</strong><p>10–15 minutes at your own pace.</p></div></div>
+    <div class="goal"><span class="emoji">🏋️</span><div><strong>Build gym consistency</strong><p>Start with 2–3 days weekly and get beginner guidance.</p></div></div>
+    <div class="goal"><span class="emoji">🌙</span><div><strong>Sleep by 9:30 PM</strong><p>Leave enough time for a full night's rest.</p></div></div>
+    <div class="notice">Gym tip: use beginner-friendly weights and guidance. Rest when needed, and stop if you feel pain or dizziness. On non-gym days, choose easy activity or rest.</div>
+  </section>
+  <div class="footer">Made for your progress • Your checklist saves on this device</div>
+</main>
+<script>
+const tasks=[
+["7:00 AM","Wake up & freshen up","Start your day","🌅"],
+["7:30 AM","Morning walk","Just 10–15 minutes","🚶"],
+["8:00 AM","Breakfast","Eat a proper breakfast","🥣"],
+["8:30–9:30 AM","Study session 1","One focused hour","📚"],
+["9:30–11:00 AM","Gaming session 1","90 minutes 🎮","🎮"],
+["11:00 AM–12:00 PM","Study session 2","One focused hour","📚"],
+["12:00–1:00 PM","Lunch & rest","Take a proper break","🍽️"],
+["1:00–2:00 PM","Study session 3","Final study hour","📚"],
+["2:00–3:30 PM","Free time","Relax or do a hobby","☕"],
+["3:30–4:30 PM","Gym / active recovery","Gym on planned days; easy activity otherwise","🏋️"],
+["4:30–5:00 PM","Gaming session 2","30 minutes 🎮","🎮"],
+["5:00–7:30 PM","Shower & free time","Unwind and get comfortable","🚿"],
+["7:30 PM","Dinner","Enjoy your evening meal","🍲"],
+["8:15 PM","Wind down","Reduce screens and prepare for tomorrow","🌙"],
+["9:30 PM","Sleep time","Aim for 8–10 hours","🛌"]
+];
+let selectedDay=1;
+const storageKey="dailyGrindChecklist_v1";
+let saved={};try{saved=JSON.parse(localStorage.getItem(storageKey)||"{}")}catch(e){saved={}}
+function save(){try{localStorage.setItem(storageKey,JSON.stringify(saved))}catch(e){}}
+function isDone(i){return !!(saved[selectedDay]&&saved[selectedDay][i])}
+function renderDays(){
+ const box=document.getElementById("days");box.innerHTML="";
+ ["MON","TUE","WED","THU","FRI","SAT","SUN"].forEach((label,i)=>{
+  const b=document.createElement("button");b.className="day"+(selectedDay===i+1?" active":"");
+  b.innerHTML=`<small>${label}</small>${i+1}`;b.onclick=()=>{selectedDay=i+1;render()};box.appendChild(b)
+ });
+}
+function renderTasks(){
+ const box=document.getElementById("tasks");box.innerHTML="";
+ tasks.forEach((t,i)=>{
+  const el=document.createElement("div");el.className="task"+(isDone(i)?" done":"");
+  el.innerHTML=`<div class="check">${isDone(i)?"✓":""}</div><div class="taskbody"><div class="time">${t[0]}</div><div class="taskname">${t[1]}</div><div class="detail">${t[2]}</div></div><div style="font-size:21px">${t[3]}</div>`;
+  el.onclick=()=>{if(!saved[selectedDay])saved[selectedDay]={};saved[selectedDay][i]=!saved[selectedDay][i];save();render()};box.appendChild(el)
+ });
+}
+function render(){
+ renderDays();renderTasks();
+ const n=tasks.filter((_,i)=>isDone(i)).length;
+ document.getElementById("count").textContent=`${n}/15 done`;
+ document.getElementById("bar").style.width=(n/tasks.length*100)+"%";
+ document.getElementById("daylabel").textContent=`Day ${selectedDay}`;
+}
+document.getElementById("reset").onclick=()=>{if(confirm("Reset the checklist for Day "+selectedDay+"?")){saved[selectedDay]={};save();render()}};
+document.getElementById("copy").onclick=async()=>{
+ const txt=`DAILY GRIND — Day ${selectedDay}\n`+tasks.map((t,i)=>`${isDone(i)?"[x]":"[ ]"} ${t[0]} — ${t[1]}`).join("\n")+`\nProgress: ${tasks.filter((_,i)=>isDone(i)).length}/15`;
+ try{await navigator.clipboard.writeText(txt);alert("Today's progress copied!")}catch(e){prompt("Copy your progress:",txt)}
+};
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
+render();
+</script>
+</body>
+</html>
